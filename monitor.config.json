@@ -1,0 +1,12 @@
+{
+  "pollIntervalSeconds": 60,
+  "desktopNotifications": true,
+  "assets": [
+    { "id": "bitcoin", "symbol": "BTC", "change24hPercent": 5 },
+    { "id": "ethereum", "symbol": "ETH", "change24hPercent": 6 },
+    { "id": "solana", "symbol": "SOL", "change24hPercent": 8 },
+    { "id": "tether", "symbol": "USDT", "change24hPercent": 1 },
+    { "id": "usd-coin", "symbol": "USDC", "change24hPercent": 1 },
+    { "id": "jpy-coin", "symbol": "JPYC", "peg": 1, "pegDeviationPercent": 1 }
+  ]
+}
