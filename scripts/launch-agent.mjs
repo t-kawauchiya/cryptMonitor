@@ -26,7 +26,7 @@ function xml(value) {
 }
 
 function plist() {
-  const monitorPath = path.join(root, 'scripts', 'monitor.mjs');
+  const launcherPath = path.join(root, 'scripts', 'launchd-run.sh');
   const stdoutPath = path.join(stateDir, 'launchd.out.log');
   const stderrPath = path.join(stateDir, 'launchd.err.log');
   return [
@@ -38,8 +38,8 @@ function plist() {
     '  <string>' + label + '</string>',
     '  <key>ProgramArguments</key>',
     '  <array>',
-    '    <string>' + xml(process.execPath) + '</string>',
-    '    <string>' + xml(monitorPath) + '</string>',
+    '    <string>/bin/bash</string>',
+    '    <string>' + xml(launcherPath) + '</string>',
     '  </array>',
     '  <key>WorkingDirectory</key>',
     '  <string>' + xml(root) + '</string>',
@@ -78,11 +78,18 @@ if (command === 'install') {
   console.log('cryptMonitorの自動監視を解除しました。');
 } else if (command === 'status') {
   const result = run(['print', service], { quiet: true });
-  if (result.status === 0) {
+  if (result.status !== 0) {
+    console.log('cryptMonitorの自動監視は未設定です。');
+    process.exit(1);
+  }
+  // launchctl print succeeds for any registered job, including one that keeps crashing.
+  if (/^\s*state = running$/m.test(result.stdout)) {
     console.log('cryptMonitorは自動監視中です。');
     process.exit(0);
   }
-  console.log('cryptMonitorの自動監視は未設定です。');
+  const lastExit = result.stdout.match(/last exit code = (.+)/)?.[1] ?? '不明';
+  console.log('cryptMonitorは登録済みですが停止しています（last exit code: ' + lastExit + '）。');
+  console.log('エラーログ: ' + path.join(stateDir, 'launchd.err.log'));
   process.exit(1);
 } else {
   console.error('使い方: node scripts/launch-agent.mjs install|uninstall|status');

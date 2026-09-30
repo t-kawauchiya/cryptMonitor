@@ -26,3 +26,5 @@
     npm run monitor:uninstall
 
 常駐監視の標準出力とエラーは .monitor/launchd.out.log と .monitor/launchd.err.log に保存されます。
+
+常駐監視は起動のたびに node を探します（nvm の default → /opt/homebrew/bin/node → /usr/local/bin/node）。別の node を使う場合は plist の EnvironmentVariables で CRYPTMONITOR_NODE を指定してください。
