@@ -11,6 +11,9 @@
     "start": "wrangler dev --config dist/server/wrangler.json",
     "lint": "oxlint",
     "monitor": "node scripts/monitor.mjs",
+    "monitor:install": "node scripts/launch-agent.mjs install",
+    "monitor:status": "node scripts/launch-agent.mjs status",
+    "monitor:uninstall": "node scripts/launch-agent.mjs uninstall",
     "format": "oxfmt"
   },
   "dependencies": {
