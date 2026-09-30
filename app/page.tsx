@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowDownRight, ArrowUpRight, Bell, CircleAlert, Clock3, RefreshCw, ShieldCheck, Sparkles, TrendingUp, WalletCards } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
-type MarketRow = { id: string; current_price: number; price_change_percentage_24h: number | null; market_cap?: number; image?: string };
+type MarketRow = { id: string; current_price: number; price_change_percentage_24h: number | null; market_cap: number; image: string };
 type Asset = { id: string; symbol: string; name: string; price: number; change: number; marketCap?: number; image?: string };
 const tracked = [
   { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin' }, { id: 'ethereum', symbol: 'ETH', name: 'Ethereum' },
