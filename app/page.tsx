@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ArrowDownRight, ArrowUpRight, Bell, CircleAlert, Clock3, RefreshCw, ShieldCheck, Sparkles, TrendingUp, WalletCards } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
+type MarketRow = { id: string; current_price: number; price_change_percentage_24h: number | null; market_cap: number; image: string };
 type Asset = { id: string; symbol: string; name: string; price: number; change: number; marketCap?: number; image?: string };
 const tracked = [
   { id: 'bitcoin', symbol: 'BTC', name: 'Bitcoin' }, { id: 'ethereum', symbol: 'ETH', name: 'Ethereum' },
@@ -45,15 +46,15 @@ export default function Home() {
     try {
       const response = await fetch('https://api.coingecko.com/api/v3/coins/markets?vs_currency=jpy&ids=bitcoin,ethereum,solana,tether,usd-coin,jpy-coin&price_change_percentage=24h');
       if (!response.ok) throw new Error('market data unavailable');
-      const data = await response.json();
+      const data = (await response.json()) as MarketRow[];
       setAssets(tracked.map((item) => {
-        const coin = data.find((row: { id: string }) => row.id === item.id);
+        const coin = data.find((row) => row.id === item.id);
         return coin ? { ...item, price: coin.current_price, change: coin.price_change_percentage_24h ?? 0, marketCap: coin.market_cap, image: coin.image } : fallback.find((row) => row.id === item.id)!;
       }));
     } catch { /* Keep the useful starter values if the public feed is temporarily unavailable. */ }
     finally { setUpdatedAt(new Date()); setLoading(false); }
   }, []);
-  useEffect(() => { refresh(); }, [refresh]);
+  useEffect(() => { void refresh(); }, [refresh]);
 
   const main = assets.filter((asset) => ['BTC', 'ETH', 'SOL'].includes(asset.symbol));
   const stable = assets.filter((asset) => ['USDT', 'USDC', 'JPYC'].includes(asset.symbol));
